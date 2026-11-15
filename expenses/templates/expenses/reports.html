@@ -1,0 +1,152 @@
+{% extends "expenses/base.html" %}
+{% load static %}
+
+{% block title %}Reports{% endblock %}
+{% block page_title %}Reports{% endblock %}
+{% block page_subtitle %}Understand where your money goes.{% endblock %}
+
+{% block content %}
+<div class="page-stack">
+
+    <!-- Report KPI cards -->
+    <section class="report-kpi-grid">
+        <div class="report-kpi">
+            <span class="kpi-label">Total Spent</span>
+            <h3>$4,681.00</h3>
+            <small>This month</small>
+        </div>
+        <div class="report-kpi">
+            <span class="kpi-label">Top Category</span>
+            <h3>Food &amp; Dining</h3>
+            <small>32% of spend</small>
+        </div>
+        <div class="report-kpi">
+            <span class="kpi-label">Avg / Day</span>
+            <h3>$156.03</h3>
+            <small>Last 30 days</small>
+        </div>
+        <div class="report-kpi">
+            <span class="kpi-label">Largest Expense</span>
+            <h3>$1,200.00</h3>
+            <small>Rent</small>
+        </div>
+    </section>
+
+    <!-- Donut + breakdown -->
+    <section class="report-grid">
+        <div class="dashboard-panel">
+            <div class="panel-heading">
+                <div>
+                    <h3>Spending by Category</h3>
+                    <p>Where your money goes</p>
+                </div>
+                <select class="select-input">
+                    <option>This month</option>
+                    <option>Last month</option>
+                    <option>This year</option>
+                </select>
+            </div>
+
+            <!-- Donut rendered by charts.js from #reports-data -->
+            <div class="donut-wrap">
+                <div class="donut-holder" id="donut-chart"></div>
+                <ul class="donut-legend" id="donut-legend"></ul>
+            </div>
+        </div>
+
+        <div class="dashboard-panel">
+            <div class="panel-heading">
+                <div>
+                    <h3>Category Breakdown</h3>
+                    <p>Share of total spend</p>
+                </div>
+            </div>
+            <div class="breakdown-list" id="breakdown-list">
+                {# Django: replace with a for loop over categories #}
+                <div class="breakdown-row" data-category="Food">
+                    <span class="breakdown-name"><span class="dot food-dot"></span>🍔 Food</span>
+                    <div class="progress"><span class="progress-fill" style="width: 32%"></span></div>
+                    <span class="breakdown-value">$1,498.00</span>
+                </div>
+                <div class="breakdown-row" data-category="Housing">
+                    <span class="breakdown-name"><span class="dot housing-dot"></span>🏠 Housing</span>
+                    <div class="progress"><span class="progress-fill" style="width: 26%"></span></div>
+                    <span class="breakdown-value">$1,216.00</span>
+                </div>
+                <div class="breakdown-row" data-category="Utilities">
+                    <span class="breakdown-name"><span class="dot utilities-dot"></span>🔌 Utilities</span>
+                    <div class="progress"><span class="progress-fill" style="width: 14%"></span></div>
+                    <span class="breakdown-value">$655.00</span>
+                </div>
+                <div class="breakdown-row" data-category="Transport">
+                    <span class="breakdown-name"><span class="dot transport-dot"></span>🚗 Transport</span>
+                    <div class="progress"><span class="progress-fill" style="width: 11%"></span></div>
+                    <span class="breakdown-value">$515.00</span>
+                </div>
+                <div class="breakdown-row" data-category="Entertainment">
+                    <span class="breakdown-name"><span class="dot entertainment-dot"></span>🎬 Entertainment</span>
+                    <div class="progress"><span class="progress-fill" style="width: 9%"></span></div>
+                    <span class="breakdown-value">$421.00</span>
+                </div>
+                <div class="breakdown-row" data-category="Other">
+                    <span class="breakdown-name"><span class="dot other-dot"></span>📦 Other</span>
+                    <div class="progress"><span class="progress-fill" style="width: 8%"></span></div>
+                    <span class="breakdown-value">$376.00</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Monthly trend -->
+    <section class="dashboard-panel">
+        <div class="panel-heading">
+            <div>
+                <h3>Monthly Trend</h3>
+                <p>Income vs. expenses over the last 6 months</p>
+            </div>
+            <div class="legend-inline">
+                <span class="legend-item"><i class="swatch income-swatch"></i>Income</span>
+                <span class="legend-item"><i class="swatch expense-swatch"></i>Expenses</span>
+            </div>
+        </div>
+
+        <div class="chart chart-tall">
+            <div class="chart-y-axis" id="trend-y-axis">
+                <span>$4k</span><span>$3k</span><span>$2k</span><span>$1k</span><span>$0</span>
+            </div>
+            <div class="chart-content">
+                <div class="chart-grid-lines">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <!-- Grouped bars rendered by charts.js from #reports-data.trend -->
+                <div class="chart-bars grouped" id="trend-bars"></div>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'expenses/js/charts.js' %}" defer></script>
+<script type="application/json" id="reports-data">
+{
+  "donut": [
+    { "label": "Food", "value": 1498, "color": "#f97316" },
+    { "label": "Housing", "value": 1216, "color": "#2563eb" },
+    { "label": "Utilities", "value": 655, "color": "#0ea5e9" },
+    { "label": "Transport", "value": 515, "color": "#9333ea" },
+    { "label": "Entertainment", "value": 421, "color": "#ec4899" },
+    { "label": "Other", "value": 376, "color": "#94a3b8" }
+  ],
+  "trend": [
+    { "label": "Jun", "income": 4200, "expense": 1820 },
+    { "label": "Jul", "income": 4500, "expense": 2400 },
+    { "label": "Aug", "income": 4100, "expense": 1960 },
+    { "label": "Sep", "income": 4800, "expense": 3100 },
+    { "label": "Oct", "income": 4600, "expense": 2700 },
+    { "label": "Nov", "income": 4850, "expense": 2340 }
+  ]
+}
+</script>
+{% endblock %}

@@ -1,0 +1,225 @@
+{% extends "expenses/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}
+    {% if user.is_authenticated %}
+        Welcome back, {{ user.first_name|default:user.username }}! Here's your financial overview.
+    {% else %}
+        Here's your financial overview.
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+
+    <!-- Heading -->
+    <div class="dashboard-heading">
+        <div>
+            <h1>Financial Overview</h1>
+            <p>Track your income and spending at a glance.</p>
+        </div>
+        <button type="button" class="primary-button" data-open-modal="add-expense-modal">
+            <span class="btn-icon">+</span> Add Expense
+        </button>
+    </div>
+
+    <!-- Summary cards -->
+    <section class="summary-grid">
+        <article class="summary-card accent-blue">
+            <div class="card-top">
+                <span>Total Income</span>
+                <span class="card-icon blue">$</span>
+            </div>
+            <h2>৳{{ total_income|floatformat:2 }}</h2>  
+            <p class="card-description">
+                {% if income_change is not None %}
+                    <span class="trend {% if income_change >= 0 %}up{% else %}down{% endif %}">
+                        {% if income_change >= 0 %}▲{% else %}▼{% endif %}
+                        {{ income_change|floatformat:1 }}%
+                    </span>
+                {% else %}
+                    <span class="trend">N/A</span>
+                {% endif %}
+                vs last month
+            </p>
+        </article>
+
+        <article class="summary-card accent-red">
+            <div class="card-top">
+                <span>Total Expenses</span>
+                <span class="card-icon red">−</span>
+            </div>
+            <h2>৳{{ total_expense|floatformat:2 }}</h2>
+            <p class="card-description">
+                {% if expense_change is not None %}
+                    <span class="trend {% if expense_change <= 0 %}up{% else %}down{% endif %}">
+                        {% if expense_change >= 0 %}▲{% else %}▼{% endif %}
+                        {{ expense_change|floatformat:1 }}%
+                    </span>
+                {% else %}
+                    <span class="trend">N/A</span>
+                {% endif %}
+                vs last month
+            </p>
+        </article>
+
+        <article class="summary-card accent-green">
+            <div class="card-top">
+                <span>Balance</span>
+                <span class="card-icon green">=</span>
+            </div>
+            <h2>৳{{ balance|floatformat:2 }}</h2>
+            <p class="card-description">Available to spend</p>
+        </article>
+
+        <article class="summary-card accent-purple">
+            <div class="card-top">
+                <span>Savings</span>
+                <span class="card-icon purple">%</span>
+            </div>
+            <h2>৳{{ monthly_savings|floatformat:2 }}</h2>
+            <p class="card-description">
+                <span class="trend {% if savings_percentage >= 0 %}up{% else %}down{% endif %}">
+                    {{ savings_percentage|floatformat:1 }}%
+                </span>
+            </p>
+        </article>
+    </section>
+
+    <!-- Chart + Quick actions -->
+    <section class="dashboard-grid">
+        <div class="dashboard-panel">
+            <div class="panel-heading">
+                <div>
+                    <h3>Spending Overview</h3>
+                    <p>Your monthly expense trend</p>
+                </div>
+                <select id="chart-range" class="select-input">
+                    <option value="6">Last 6 months</option>
+                    <option value="12">Last 12 months</option>
+                    <option value="30">Last 30 days</option>
+                </select>
+            </div>
+
+            <div class="chart">
+                <div class="chart-y-axis" id="chart-y-axis">
+                    <span>৳4k</span><span>৳3k</span><span>৳2k</span><span>৳1k</span><span>৳0</span>
+                </div>
+                <div class="chart-content">
+                    <div class="chart-grid-lines">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="chart-bars" id="chart-bars"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-panel quick-panel">
+            <div class="panel-heading">
+                <div><h3>Quick Actions</h3><p>Get things done fast</p></div>
+            </div>
+
+            <a href="/add/" class="action-item" data-open-modal="add-expense-modal">
+                <span class="action-icon blue">+</span>
+                <div>
+                    <strong>Add Expense</strong>
+                    <small>Log a new transaction</small>
+                </div>
+                <span class="action-arrow">→</span>
+            </a>
+
+            <a href="/transactions/" class="action-item">
+                <span class="action-icon green">⇄</span>
+                <div>
+                    <strong>View Transactions</strong>
+                    <small>See your full history</small>
+                </div>
+                <span class="action-arrow">→</span>
+            </a>
+
+            <a href="/reports/" class="action-item">
+                <span class="action-icon purple">▤</span>
+                <div>
+                    <strong>Reports</strong>
+                    <small>Category breakdown</small>
+                </div>
+                <span class="action-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Recent transactions -->
+    <section class="dashboard-panel recent-panel">
+        <div class="panel-heading">
+            <div>
+                <h3>Recent Transactions</h3>
+                <p>Your latest activity</p>
+            </div>
+            <a href="/transactions/" class="view-all">View all →</a>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="transaction-table">
+                <thead>
+                    <tr>
+                        <th>DESCRIPTION</th>
+                        <th>CATEGORY</th>
+                        <th>DATE</th>
+                        <th class="text-right">AMOUNT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td>
+                            <div class="transaction-name">
+                                <span class="transaction-icon">💰</span>
+                            
+                            <div>
+                                <strong>{{ expense.title }}</strong>
+                                <small>{{ expense.note }}</small>
+                            </div>
+                        </div>
+                        </td>
+
+                        <td><span class="category-tag">{{ expense.category }}</span></td>
+
+                        <td>{{expense.date|date:"M d, Y"}}</td>
+
+                        <td class="text-right">
+                            {% if expense.transaction_type == "income"%}
+                                <span class="income-amount">
+                                    +৳{{ expense.amount|floatformat:2 }}
+                                </span>
+                            {% else %}
+                                <span class="expense-amount">
+                                    −৳{{ expense.amount|floatformat:2 }}
+                                </span>
+                            {% endif %}    
+                        </td>
+                    </tr>
+                  {% empty %}
+                    
+                    <tr>
+                        <td colspan="4" class="text-center">No recent transactions found.</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+{% include "expenses/partials/add_expense_modal.html" %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'expenses/js/charts.js' %}" defer></script>
+<script src="{% static 'expenses/js/forms.js' %}?v=2" defer></script>
+
+{{ dashboard_data|json_script:"dashboard-data" }}
+
+{% endblock %}

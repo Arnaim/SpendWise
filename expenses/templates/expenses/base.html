@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}SpendWise{% endblock %} | Personal Finance</title>
+
+    <link rel="stylesheet" href="{% static 'expenses/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'expenses/css/components.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <h2>SpendWise<span>.</span></h2>
+                <p>Personal Finance</p>
+            </div>
+
+            <nav class="navigation">
+                <p class="nav-label">MENU</p>
+
+                <a href="/" class="nav-link active">
+                    <span>▦</span>
+                    Dashboard
+                </a>
+
+                <a href="/transactions/" class="nav-link">
+                    <span>⇄</span>
+                    Transactions
+                </a>
+
+                <a href="/reports/" class="nav-link">
+                    <span>▤</span>
+                    Reports
+                </a>
+
+                <p class="nav-label">PREFERENCES</p>
+
+                <a href="/settings/" class="nav-link">
+                    <span>⚙</span>
+                    Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-avatar">A</div>
+
+                <div class="user-info">
+                    <strong>Arnab</strong>
+                    <span>Personal Account</span>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-container">
+
+            <header class="topbar">
+                <div>
+                    <h3>{% block page_title %}Dashboard{% endblock %}</h3>
+                    <p>{% block page_subtitle %}Welcome back! Here's your financial overview.{% endblock %}</p>
+                </div>
+
+                <div class="topbar-right">
+                    <span class="current-date" id="current-date"></span>
+                </div>
+            </header>
+
+            <main class="page-content">
+                {% block content %}
+                <!-- Individual page content goes here -->
+                {% endblock %}
+            </main>
+
+            <footer class="footer">
+                <p>SpendWise &copy; 2026. Manage your money wisely.</p>
+            </footer>
+
+        </div>
+
+    </div>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

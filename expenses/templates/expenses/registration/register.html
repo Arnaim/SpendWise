@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | SpendWise</title>
+
+    <link rel="stylesheet" href="{% static 'expenses/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'expenses/css/components.css' %}">
+    <script src="{% static 'expenses/js/script.js' %}" defer></script>
+</head>
+
+<body class="auth-body">
+
+    <div class="auth-shell">
+
+        <!-- Brand panel -->
+        <aside class="auth-brand">
+            <div class="auth-brand-inner">
+                <h1 class="auth-logo">SpendWise<span>.</span></h1>
+                <p class="auth-tag">Personal Finance, Simplified.</p>
+
+                <ul class="auth-points">
+                    <li>📊 Track every expense in real time</li>
+                    <li>🎯 Hit your monthly savings goals</li>
+                    <li>📈 Insightful reports &amp; trends</li>
+                </ul>
+
+                <div class="auth-card-quote">
+                    <p>“SpendWise helped me save 26% more in a single month.”</p>
+                    <span>— Priya, happy user</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Form panel -->
+        <main class="auth-form-panel">
+            <div class="auth-card">
+
+                <h2>Create your account</h2>
+                <p class="auth-sub">Start tracking your money in minutes.</p>
+
+                {# Django: point action at {% url 'register' %} and POST the form. #}
+                <form class="auth-form" method="post" action="/register/" id="register-form" novalidate>
+                    {% csrf_token %}
+
+                    <div class="form-row form-row-2col">
+                        <label class="form-field">
+                            <span class="form-label">First name</span>
+                            <input type="text" name="first_name" id="reg-first" placeholder="First name" required>
+                            <small class="form-error" data-for="reg-first"></small>
+                        </label>
+                        <label class="form-field">
+                            <span class="form-label">Last name</span>
+                            <input type="text" name="last_name" id="reg-last" placeholder="Last name" required>
+                            <small class="form-error" data-for="reg-last"></small>
+                        </label>
+                    </div>
+
+                    <label class="form-field">
+                        <span class="form-label">Email</span>
+                        <div class="input-affix">
+                            <span class="affix-icon">✉</span>
+                            <input type="email" name="email" id="reg-email" placeholder="you@example.com" required>
+                        </div>
+                        <small class="form-error" data-for="reg-email"></small>
+                    </label>
+
+                    <label class="form-field">
+                        <span class="form-label">Password</span>
+                        <div class="input-affix">
+                            <span class="affix-icon">🔒</span>
+                            <input type="password" name="password" id="reg-password" placeholder="Min. 8 characters" required minlength="8">
+                            <button type="button" class="affix-toggle" data-toggle-password="reg-password" aria-label="Show password">👁</button>
+                        </div>
+                        <small class="form-error" data-for="reg-password"></small>
+                    </label>
+
+                    <label class="form-field">
+                        <span class="form-label">Confirm password</span>
+                        <div class="input-affix">
+                            <span class="affix-icon">🔒</span>
+                            <input type="password" name="password2" id="reg-confirm" placeholder="Repeat password" required>
+                            <button type="button" class="affix-toggle" data-toggle-password="reg-confirm" aria-label="Show password">👁</button>
+                        </div>
+                        <small class="form-error" data-for="reg-confirm"></small>
+                    </label>
+
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="agree" required>
+                        <span>I agree to the <a href="#" class="auth-link">Terms</a> and <a href="#" class="auth-link">Privacy Policy</a>.</span>
+                    </label>
+
+                    <button type="submit" class="primary-button auth-submit">Create Account</button>
+                </form>
+
+                <div class="auth-divider"><span>or continue with</span></div>
+
+                <button type="button" class="social-button" data-provider="google">
+                    <span class="social-g">G</span> Google
+                </button>
+
+                <p class="auth-switch">
+                    Already have an account?
+                    <a href="/login/" class="auth-link">Sign in</a>
+                </p>
+
+            </div>
+        </main>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!-- Transaction filter modal. Open with data-open-modal="filter-modal". -->
+<div class="modal" id="filter-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+
+    <div class="modal-dialog modal-dialog-sm" role="dialog" aria-modal="true" aria-labelledby="filter-title">
+        <div class="modal-header">
+            <div>
+                <h3 id="filter-title">Filter Transactions</h3>
+                <p>Narrow down by category and type.</p>
+            </div>
+            <button type="button" class="modal-close" data-close-modal aria-label="Close">×</button>
+        </div>
+
+        <div class="modal-body">
+            <form class="expense-form" id="filter-form" onsubmit="return false;">
+                <label class="form-field">
+                    <span class="form-label">Category</span>
+                    <select id="filter-category">
+                        <option value="all">All categories</option>
+                        <option value="Food">🍔 Food</option>
+                        <option value="Utilities">🔌 Utilities</option>
+                        <option value="Transport">🚗 Transport</option>
+                        <option value="Shopping">🛍️ Shopping</option>
+                        <option value="Health">💊 Health</option>
+                        <option value="Entertainment">🎬 Entertainment</option>
+                        <option value="Education">📚 Education</option>
+                        <option value="Income">💰 Income</option>
+                        <option value="Other">📦 Other</option>
+                    </select>
+                </label>
+
+                <label class="form-field">
+                    <span class="form-label">Type</span>
+                    <select id="filter-type">
+                        <option value="all">All types</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </label>
+
+                <div class="form-row form-row-2col">
+                    <label class="form-field">
+                        <span class="form-label">From</span>
+                        <input type="date" id="filter-from">
+                    </label>
+                    <label class="form-field">
+                        <span class="form-label">To</span>
+                        <input type="date" id="filter-to">
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="ghost-button" id="filter-clear">Clear</button>
+                    <button type="button" class="primary-button" id="filter-apply">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

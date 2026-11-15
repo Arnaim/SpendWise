@@ -1,0 +1,101 @@
+{% extends "expenses/base.html" %}
+{% load static %}
+
+{% block title %}Edit Expense{% endblock %}
+{% block page_title %}Edit Expense{% endblock %}
+{% block page_subtitle %}Update the details of this transaction.{% endblock %}
+
+{% block content %}
+<div class="page-stack">
+    <div class="form-card">
+        <div class="form-card-head">
+            <h3>Edit Expense</h3>
+            <p>Make changes and save.</p>
+        </div>
+
+        {# Django: point action at {% url 'edit_expense' expense.id %} and POST the form. #}
+        <form class="expense-form" method="post" action="{% url 'edit_expense' expense.id %}" id="expense-form" novalidate>
+            {% csrf_token %}
+
+            <div class="form-row">
+                <label class="form-field">
+                    <span class="form-label">Title</span>
+                    <input type="text" name="title" id="exp-title" placeholder="e.g. Grocery run" value="{{ expense.title|default:'' }}" required maxlength="100">
+                    <small class="form-error" data-for="exp-title"></small>
+                </label>
+            </div>
+
+            <div class="form-row form-row-2col">
+                <label class="form-field">
+                    <span class="form-label">Amount</span>
+                    <div class="input-affix">
+                        <span class="affix-prefix">৳</span>
+                        <input type="number" name="amount" id="exp-amount" placeholder="0.00" step="0.01" min="0" value="{{ expense.amount|default:'' }}" required>
+                    </div>
+                    <small class="form-error" data-for="exp-amount"></small>
+                </label>
+                
+                <label class="form-field">
+                    <span class="form-label">Transaction Type</span>
+                    <select name="transaction_type" id="exp-type" required>
+                        <option value="expense" {% if expense.transaction_type == "expense" %}selected{% endif %}>Expense</option>
+                        <option value="income" {% if expense.transaction_type == "income" %}selected{% endif %}>Income</option>
+                    </select>
+                </label>
+
+                <label class="form-field">
+                    <span class="form-label">Category</span>
+                    <select name="category" id="exp-category" required>
+                        <option value="" disabled {% if not expense.category %}selected{% endif %}>Select category</option>
+                        <option value="Food" {% if expense.category == "Food" %}selected{% endif %}>🍔 Food</option>
+                        <option value="Utilities" {% if expense.category == "Utilities" %}selected{% endif %}>🔌 Utilities</option>
+                        <option value="Transport" {% if expense.category == "Transport" %}selected{% endif %}>🚗 Transport</option>
+                        <option value="Shopping" {% if expense.category == "Shopping" %}selected{% endif %}>🛍️ Shopping</option>
+                        <option value="Health" {% if expense.category == "Health" %}selected{% endif %}>💊 Health</option>
+                        <option value="Entertainment" {% if expense.category == "Entertainment" %}selected{% endif %}>🎬 Entertainment</option>
+                        <option value="Education" {% if expense.category == "Education" %}selected{% endif %}>📚 Education</option>
+                        <option value="Income" {% if expense.category == "Income" %}selected{% endif %}>💰 Income</option>
+                        <option value="Other" {% if expense.category == "Other" %}selected{% endif %}>📦 Other</option>
+                    </select>
+                    <small class="form-error" data-for="exp-category"></small>
+                </label>
+            </div>
+
+            <div class="form-row form-row-2col">
+                <label class="form-field">
+                    <span class="form-label">Date</span>
+                    <input type="date" name="date" id="exp-date" value="{{ expense.date|date:'Y-m-d'|default:'' }}" required>
+                    <small class="form-error" data-for="exp-date"></small>
+                </label>
+
+                <label class="form-field">
+                    <span class="form-label">Payment method</span>
+                        <select name="payment_method" id="exp-method">
+                            <option value="" {% if not expense.payment_method %}selected{% endif %}>Select payment method</option>
+                            <option value="cash" {% if expense.payment_method == "cash" %}selected{% endif %}>💵 Cash</option>
+                            <option value="card" {% if expense.payment_method == "card" %}selected{% endif %}>💳 Card</option>
+                            <option value="bank" {% if expense.payment_method == "bank" %}selected{% endif %}>🏦 Bank Transfer</option>
+                            <option value="mobile" {% if expense.payment_method == "mobile" %}selected{% endif %}>📱 Mobile Banking</option>
+                        </select>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label class="form-field">
+                    <span class="form-label">Note <span class="optional">(optional)</span></span>
+                    <textarea name="note" id="exp-note" rows="2" placeholder="Add a note...">{{ expense.note|default:'' }}</textarea>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <a href="/transactions/" class="ghost-button">Cancel</a>
+                <button type="submit" class="primary-button">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'expenses/js/forms.js' %}" defer></script>
+{% endblock %}

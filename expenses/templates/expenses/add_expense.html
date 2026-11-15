@@ -1,0 +1,23 @@
+{% extends "expenses/base.html" %}
+{% load static %}
+
+{% block title %}Add Expense{% endblock %}
+{% block page_title %}Add Expense{% endblock %}
+{% block page_subtitle %}Log a new transaction to your account.{% endblock %}
+
+{% block content %}
+<div class="page-stack">
+    <div class="form-card">
+        <div class="form-card-head">
+            <h3>New Expense</h3>
+            <p>Fill in the details below. Fields marked are required.</p>
+        </div>
+
+        {% include "expenses/partials/expense_form.html" %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'expenses/js/forms.js' %}" defer></script>
+{% endblock %}

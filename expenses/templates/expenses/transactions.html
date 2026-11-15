@@ -1,0 +1,139 @@
+{% extends "expenses/base.html" %}
+{% load static %}
+
+{% block title %}Transactions{% endblock %}
+{% block page_title %}Transactions{% endblock %}
+{% block page_subtitle %}Browse, search and manage every transaction.{% endblock %}
+
+{% block content %}
+<div class="page-stack">
+
+    <!-- Toolbar -->
+    <div class="page-toolbar">
+        <div class="search-box" id="search-box">
+            <span class="search-icon">🔎</span>
+            <input type="search" id="search-input" placeholder="Search transactions..." autocomplete="off">
+        </div>
+
+        <div class="toolbar-actions">
+            <button type="button" class="ghost-button" id="filter-toggle" data-open-modal="filter-modal">
+                <span>▤</span> Filter
+            </button>
+            <button type="button" class="primary-button" data-open-modal="add-expense-modal">
+                <span class="btn-icon">+</span> Add Expense
+            </button>
+        </div>
+    </div>
+
+    <!-- Category chips -->
+    <div class="chip-row" id="chip-row">
+        <button class="chip active" data-category="all">All</button>
+        <button class="chip" data-category="Food">🍔 Food</button>
+        <button class="chip" data-category="Utilities">🔌 Utilities</button>
+        <button class="chip" data-category="Transport">🚗 Transport</button>
+        <button class="chip" data-category="Shopping">🛍️ Shopping</button>
+        <button class="chip" data-category="Health">💊 Health</button>
+        <button class="chip" data-category="Entertainment">🎬 Entertainment</button>
+        <button class="chip" data-category="Education">📚 Education</button>
+        <button class="chip" data-category="Income">💰 Income</button>
+        <button class="chip" data-category="Other">📦 Other</button>
+    </div>
+
+    <!-- Transactions table -->
+    <div class="dashboard-panel">
+        <div class="table-wrapper">
+            <table class="transaction-table tx-table">
+                <thead>
+                    <tr>
+                        <th>DESCRIPTION</th>
+                        <th>CATEGORY</th>
+                        <th>METHOD</th>
+                        <th>DATE</th>
+                        <th class="text-right">AMOUNT</th>
+                        <th class="text-right">ACTIONS</th>
+                    </tr>
+                </thead>
+                
+                    <tbody id="tx-rows">
+                        {% for expense in expenses %}
+                        <tr data-category="{{ expense.category }}"
+                            data-title="{{ expense.title }}"
+                            data-amount="{{ expense.amount }}"
+                            data-type="{{ expense.transaction_type }}">
+
+                            <td>
+                                <div class="transaction-name">
+                                    <span class="transaction-icon">
+                                        {% if expense.transaction_type == "income" %}💰{% else %}💸{% endif %}
+                                    </span>
+                                    <div>
+                                        <strong>{{ expense.title }}</strong>
+                                        <small>{{ expense.note|default:"—" }}</small>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>{{ expense.category }}</td>
+                            <td>{{ expense.get_payment_method_display|default:"—" }}</td>
+                            <td>{{ expense.date|date:"M d, Y" }}</td>
+
+                            <td class="text-right {% if expense.transaction_type == 'income' %}income-amount{% else %}expense-amount{% endif %}">
+                                {% if expense.transaction_type == "income" %}+{% else %}−{% endif %}৳{{ expense.amount|floatformat:2 }}
+                            </td>
+
+                            <td class="text-right">
+                                <div class="row-actions">
+                                    <a class="icon-btn" title="Edit"
+                                    href="{% url 'edit_expense' expense.id %}">✎</a>
+
+                                    <form method="post" action="{% url 'delete_expense' expense.id %}"
+                                        onsubmit="return confirm('Are you sure you want to delete this transaction?');"
+                                        style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="icon-btn danger" title="Delete">🗑</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6">No transactions yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+            </table>
+        </div>
+
+        <!-- Empty state (shown by JS when no rows match filters) -->
+        <div class="empty-state" id="tx-empty" hidden>
+            <div class="empty-icon">🔍</div>
+            <h4>No transactions found</h4>
+            <p>Try a different search or category, or add a new expense.</p>
+            <button type="button" class="primary-button" data-open-modal="add-expense-modal">
+                <span class="btn-icon">+</span> Add Expense
+            </button>
+        </div>
+
+        <!-- Footer / pagination -->
+        <div class="table-footer">
+            <p class="table-count" id="tx-count">Showing 5 of 5 transactions</p>
+            <div class="pagination">
+                <button class="page-btn" disabled>‹</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">›</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% include "expenses/partials/add_expense_modal.html" %}
+{% include "expenses/partials/filter_modal.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'expenses/js/forms.js' %}" defer></script>
+{% endblock %}

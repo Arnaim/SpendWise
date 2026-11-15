@@ -1,0 +1,18 @@
+<!-- Add expense modal. Open with any element carrying data-open-modal="add-expense-modal". -->
+<div class="modal" id="add-expense-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="add-modal-title">
+        <div class="modal-header">
+            <div>
+                <h3 id="add-modal-title">Add New Expense</h3>
+                <p>Fill in the details to log a transaction.</p>
+            </div>
+            <button type="button" class="modal-close" data-close-modal aria-label="Close">×</button>
+        </div>
+
+        <div class="modal-body">
+            {% include "expenses/partials/expense_form.html" %}
+        </div>
+    </div>
+</div>

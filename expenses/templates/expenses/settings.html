@@ -1,0 +1,159 @@
+{% extends "expenses/base.html" %}
+{% load static %}
+
+{% block title %}Settings{% endblock %}
+{% block page_title %}Settings{% endblock %}
+{% block page_subtitle %}Manage your profile and preferences.{% endblock %}
+
+{% block content %}
+<div class="settings-stack">
+
+    <!-- Profile card -->
+    <section class="dashboard-panel profile-card">
+        <div class="profile-head">
+            <div class="profile-avatar-lg">A
+                <label class="avatar-edit">
+                    <span>✎</span>
+                    <input type="file" accept="image/*" hidden>
+                </label>
+            </div>
+            <div class="profile-meta">
+                <h3>Arnab</h3>
+                <p>arnab@example.com</p>
+                <span class="member-badge">Personal Account · Member since 2024</span>
+            </div>
+            <button type="button" class="ghost-button">Edit Profile</button>
+        </div>
+
+        <form class="profile-form" method="post" action="/settings/" id="profile-form">
+            {% csrf_token %}
+            <div class="form-row form-row-3col">
+                <label class="form-field">
+                    <span class="form-label">First name</span>
+                    <input type="text" name="first_name" value="Arnab" required>
+                </label>
+                <label class="form-field">
+                    <span class="form-label">Last name</span>
+                    <input type="text" name="last_name" value="Sharma" required>
+                </label>
+                <label class="form-field">
+                    <span class="form-label">Email</span>
+                    <input type="email" name="email" value="arnab.sharma@example.com" required>
+                </label>
+            </div>
+            <div class="form-row form-row-2col">
+                <label class="form-field">
+                    <span class="form-label">Phone</span>
+                    <input type="tel" name="phone" placeholder="+1 555 000 1234">
+                </label>
+                <label class="form-field">
+                    <span class="form-label">Location</span>
+                    <input type="text" name="location" placeholder="City, Country">
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="primary-button">Save Changes</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Preferences -->
+    <section class="dashboard-panel">
+        <div class="panel-heading">
+            <div><h3>Preferences</h3><p>Customize how SpendWise works for you.</p></div>
+        </div>
+
+        <div class="setting-rows">
+            <div class="setting-row">
+                <div>
+                    <strong>Currency</strong>
+                    <small>Default currency for all amounts.</small>
+                </div>
+                <select class="select-input" id="currency-select">
+                    <option value="USD" selected>USD — $</option>
+                    <option value="EUR">EUR — €</option>
+                    <option value="GBP">GBP — £</option>
+                    <option value="INR">INR — ₹</option>
+                    <option value="AUD">AUD — A$</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <strong>Monthly budget</strong>
+                    <small>Get a nudge when you get close.</small>
+                </div>
+                <div class="input-affix">
+                    <span class="affix-prefix">$</span>
+                    <input type="number" id="budget-input" value="3000" min="0" step="50">
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <strong>Dark mode</strong>
+                    <small>Switch to a darker theme.</small>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <strong>Email notifications</strong>
+                    <small>Monthly summary of your spending.</small>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <strong>Budget alerts</strong>
+                    <small>Alerts when a category goes over budget.</small>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="primary-button" id="save-prefs">Save Preferences</button>
+        </div>
+    </section>
+
+    <!-- Danger zone -->
+    <section class="dashboard-panel danger-panel">
+        <div class="panel-heading">
+            <div><h3>Danger Zone</h3><p>These actions are permanent and can't be undone.</p></div>
+        </div>
+
+        <div class="danger-row">
+            <div>
+                <strong>Export data</strong>
+                <small>Download all your transactions as a CSV file.</small>
+            </div>
+            <button type="button" class="ghost-button" id="export-btn">Export CSV</button>
+        </div>
+
+        <div class="danger-row">
+            <div>
+                <strong>Delete account</strong>
+                <small>Permanently remove your account and all data.</small>
+            </div>
+            <button type="button" class="danger-button" id="delete-account">Delete Account</button>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'expenses/js/forms.js' %}" defer"></script>
+{% endblock %}
